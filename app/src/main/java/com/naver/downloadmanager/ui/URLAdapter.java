@@ -32,7 +32,10 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
     }
 
     public void setUrls(List<URLData> urls) {
-        mUrls = urls;
+        for (URLData urlData : urls) {
+            mUrls.add(urlData);
+            notifyItemInserted(getItemCount());
+        }
     }
 
     @NonNull

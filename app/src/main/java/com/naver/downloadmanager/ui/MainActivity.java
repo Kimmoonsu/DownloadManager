@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<URLData> list) {
                 Log.d("Moonsu", "onChanged");
+
                 mUrlAdapter.setUrls(list);
             }
         });
