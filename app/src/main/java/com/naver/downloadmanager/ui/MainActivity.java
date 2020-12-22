@@ -32,7 +32,7 @@ import com.naver.downloadmanager.framework.URLViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private RecyclerView mRecyclerView = null;
     private URLAdapter mUrlAdapter = null;
     private URLViewModel mUrlViewModel = null;
@@ -59,9 +59,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         downloadBtn.setOnClickListener(this);
 
         CheckBox selectedAllCheckBox = (CheckBox) findViewById(R.id.selectAllBtn);
+
+        selectedAllCheckBox.setOnCheckedChangeListener(this);
         selectedAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("Moonsu", "onCheckedChanaged selectall btn");
                 mUrlAdapter.selectALL(isChecked);
             }
         });
@@ -77,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mUrlViewModel.isSelectedALL().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isSelectedAll) {
-                Log.d("Moonsu", "seelect onChanged");
-                selectedAllCheckBox.setChecked(isSelectedAll);
+                checkCheckBox(selectedAllCheckBox, isSelectedAll);
             }
         });
 
@@ -91,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
         mDownloadReceiver = new DownloadReceiver();
         registerReceiver(mDownloadReceiver, intentFilter);
+    }
+
+    private void checkCheckBox(CheckBox checkBox, boolean checked) {
+        checkBox.setOnCheckedChangeListener(null);
+        checkBox.setChecked(checked);
+        checkBox.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -159,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mUrls.add(new URLData(28, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
             mUrlViewModel.addUrl(mUrls);
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        Log.d("Moonsu", "onCheckedChanaged selectall btn");
+        mUrlAdapter.selectALL(isChecked);
     }
 
     private class DownloadReceiver extends BroadcastReceiver {
