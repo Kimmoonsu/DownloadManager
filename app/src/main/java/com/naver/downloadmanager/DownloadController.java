@@ -47,14 +47,14 @@ public class DownloadController extends AppCompatActivity {
         mDownloadReceiver = new DownloadReceiver();
         registerReceiver(mDownloadReceiver, intentFilter);
 
-        Button button = (Button) findViewById(R.id.button);
+//        Button button = (Button) findViewById(R.id.button);
         requestCameraPermission();
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadImageForSDK28();
-            }
-        });
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                downloadImageForSDK28();
+//            }
+//        });
     }
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
     @Override
@@ -156,7 +156,7 @@ public class DownloadController extends AppCompatActivity {
                 .setTitle("Downloading a video")
                 .setDescription("Downloading Dev Summit")
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getLastPathSegment())
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, uri.getPath())
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true);
