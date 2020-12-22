@@ -59,6 +59,8 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.checkBox.setOnCheckedChangeListener(null);
+
         URLData item = mUrls.get(position);
         holder.id.setText(""+item.getId());
         holder.url.setText(item.getUrl());
@@ -70,7 +72,6 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
                 item.setChecked(isChecked);
                 if (isChecked) {
                     if (isSelectedALL()) {
-                        Log.d("Moonsu", "checked ALL");
                         URLViewModel.setSelectedAllFlag(true);
                     }
                 } else {
@@ -83,7 +84,6 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
     private boolean isSelectedALL() {
         for (URLData urlData : mUrls) {
             if (!urlData.isChecked()) {
-                Log.d("Moonsu", "????? : " + urlData.getId());
                 return false;
             }
         }
