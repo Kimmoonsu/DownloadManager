@@ -1,5 +1,6 @@
 package com.naver.downloadmanager.framework;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,14 +9,17 @@ import com.naver.downloadmanager.data.datasource.URLData;
 import java.util.List;
 
 public class URLViewModel extends ViewModel {
-    public static MutableLiveData<List<URLData>> urls = new MutableLiveData<>();
-
+    private final MutableLiveData<List<URLData>> mUrls = new MutableLiveData<>();
     public URLViewModel() {
 
     }
 
-    public static void addUrl(List<URLData> urlList) {
-        urls.setValue(urlList);
+    public LiveData<List<URLData>> getUrls() {
+        return mUrls;
     }
+    public void addUrl(List<URLData> urlList) {
+        mUrls.setValue(urlList);
+    }
+
 
 }

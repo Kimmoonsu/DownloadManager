@@ -13,10 +13,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <Button
-            android:id="@+id/button"
+            android:id="@+id/url_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
+            android:text="GET URL List"
+            tools:layout_editor_absoluteX="186dp"
+            tools:layout_editor_absoluteY="195dp" />
+        <Button
+            android:id="@+id/download_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download"
             tools:layout_editor_absoluteX="186dp"
             tools:layout_editor_absoluteY="195dp" />
         <androidx.recyclerview.widget.RecyclerView

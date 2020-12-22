@@ -48,7 +48,7 @@ public class DownloadController extends AppCompatActivity {
         registerReceiver(mDownloadReceiver, intentFilter);
 
 //        Button button = (Button) findViewById(R.id.button);
-        requestCameraPermission();
+//        requestCameraPermission();
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -163,7 +163,7 @@ public class DownloadController extends AppCompatActivity {
 
         mDownloadId = mDownloadManager.enqueue(request);
     }
-    private void downloadImage() {
+     private void downloadImage() {
         try {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);

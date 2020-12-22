@@ -1,9 +1,12 @@
 package com.naver.downloadmanager.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +35,9 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
     }
 
     public void setUrls(List<URLData> urls) {
-        for (URLData urlData : urls) {
-            mUrls.add(urlData);
-            notifyItemInserted(getItemCount());
-        }
+        mUrls.clear();
+        mUrls.addAll(urls);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -51,6 +53,14 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         URLData item = mUrls.get(position);
         holder.id.setText(""+item.getId());
         holder.url.setText(item.getUrl());
+        holder.state.setText(item.getState().name());
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item.setChecked(isChecked);
+                Log.d("Moonsu", "isChecked : " + isChecked);
+            }
+        });
     }
 
     @Override
@@ -59,13 +69,16 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        CheckBox checkBox;
         TextView id;
         TextView url;
-
+        TextView state;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            checkBox = itemView.findViewById(R.id.check_box);
             id = itemView.findViewById(R.id.id);
             url = itemView.findViewById(R.id.url);
+            state = itemView.findViewById(R.id.state);
         }
     }
 }
