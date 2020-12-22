@@ -54,6 +54,7 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         holder.id.setText(""+item.getId());
         holder.url.setText(item.getUrl());
         holder.state.setText(item.getState().name());
+        holder.checkBox.setChecked(false);
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
