@@ -10,6 +10,7 @@ import java.util.List;
 
 public class URLViewModel extends ViewModel {
     private final MutableLiveData<List<URLData>> mUrls = new MutableLiveData<>();
+    private static final MutableLiveData<Boolean> selectedAllFlag = new MutableLiveData<>();
     public URLViewModel() {
 
     }
@@ -19,6 +20,14 @@ public class URLViewModel extends ViewModel {
     }
     public void addUrl(List<URLData> urlList) {
         mUrls.setValue(urlList);
+    }
+
+    public LiveData<Boolean> isSelectedALL() {
+        return selectedAllFlag;
+    }
+
+    public static void setSelectedAllFlag(boolean flag) {
+        selectedAllFlag.setValue(flag);
     }
 
 

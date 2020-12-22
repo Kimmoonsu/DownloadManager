@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.naver.downloadmanager.R;
 import com.naver.downloadmanager.data.datasource.URLData;
+import com.naver.downloadmanager.framework.URLViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,14 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void selectALL(boolean isChecked) {
+        for (URLData urlData : mUrls) {
+            urlData.setChecked(isChecked);
+        }
+        notifyDataSetChanged();
+    }
+
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,14 +63,31 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         holder.id.setText(""+item.getId());
         holder.url.setText(item.getUrl());
         holder.state.setText(item.getState().name());
-        holder.checkBox.setChecked(false);
+        holder.checkBox.setChecked(item.isChecked());
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 item.setChecked(isChecked);
-                Log.d("Moonsu", "isChecked : " + isChecked);
+                if (isChecked) {
+                    if (isSelectedALL()) {
+                        Log.d("Moonsu", "checked ALL");
+                        URLViewModel.setSelectedAllFlag(true);
+                    }
+                } else {
+                    URLViewModel.setSelectedAllFlag(false);
+                }
             }
         });
+    }
+
+    private boolean isSelectedALL() {
+        for (URLData urlData : mUrls) {
+            if (!urlData.isChecked()) {
+                Log.d("Moonsu", "????? : " + urlData.getId());
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
