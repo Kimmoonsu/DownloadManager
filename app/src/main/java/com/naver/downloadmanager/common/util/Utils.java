@@ -2,6 +2,7 @@ package com.naver.downloadmanager.common.util;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
@@ -15,11 +16,10 @@ public class Utils {
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
+        NetworkCapabilities networkCapabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+        if (networkCapabilities != null) {
+            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) | networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR);
+        }
         return false;
     }
 

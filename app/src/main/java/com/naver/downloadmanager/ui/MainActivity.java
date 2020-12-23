@@ -131,8 +131,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.download_button) {
-            if (mNetworkConnection.isNetworkConnected()) {
+            if (mNetworkConnection.isNetworkConnected() && Utils.isNetworkConnected(mContext)) {
                 List<URLData> urlDataList = mUrlViewModel.getUrls().getValue();
+                if (urlDataList.size() == 0) {
+                    Toast.makeText(mContext, getResources().getString(R.string.message_click_geturl_button), Toast.LENGTH_SHORT).show();
+                }
                 for (URLData urlData : urlDataList) {
                     if (urlData.isChecked()) {
                         Log.d("Moonsu", "isChecked : " + urlData.getId());
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mUrlViewModel.addUrl(urlDataList);
                 return ;
             }
-            Toast.makeText(mContext, "Network has not connected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, getResources().getString(R.string.message_network_off), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.url_button) {
             List<URLData> urls = Utils.initData();
             mUrlViewModel.addUrl(urls);

@@ -47,10 +47,11 @@ public class NetworkConnection extends ConnectivityManager.NetworkCallback {
     public void onLost(@NonNull Network network) {
         super.onLost(network);
         Log.d(TAG, "Network lost");
-        isNetworkConnected = true;
+        isNetworkConnected = false;
     }
 
     public boolean isNetworkConnected() {
         return isNetworkConnected;
     }
+
 }

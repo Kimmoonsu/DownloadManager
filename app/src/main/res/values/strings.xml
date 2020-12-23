@@ -3,4 +3,6 @@
     <string name="id">id</string>
     <string name="title_download">Download</string>
     <string name="description_download">Downloading a file</string>
+    <string name="message_network_off">Network has not connected</string>
+    <string name="message_click_geturl_button">Please click the \'GET URL BUTTON\'</string>
 </resources>
