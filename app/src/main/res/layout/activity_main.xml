@@ -1,79 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.naver.downloadmanager.framework.URLViewModel" />
+    </data>
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-
-        <TextView
-            android:id="@+id/selectAll"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:gravity="center|left"
-            android:minWidth="20dp"
-            android:text="Select ALL"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            app:layout_constraintVertical_bias="0.5" />
-
-        <CheckBox
-            android:id="@+id/selectAllBtn"
-            android:layout_width="29dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:checked="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/selectAll"
-            app:layout_constraintTop_toTopOf="@+id/selectAll"
-            app:layout_constraintVertical_bias="0.5"></CheckBox>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_margin="10dp"
-            android:overScrollMode="never"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        tools:context=".ui.main.MainActivity">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
 
-            <Button
-                android:id="@+id/url_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GET URL List"
-                tools:layout_editor_absoluteX="186dp"
-                tools:layout_editor_absoluteY="195dp" />
 
-            <Button
-                android:id="@+id/download_button"
+
+            <TextView
+                android:id="@+id/selectAll"
                 android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center|left"
+                android:minWidth="20dp"
+                android:text="Select ALL"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <CheckBox
+                android:id="@+id/selectAllBtn"
+                android:layout_width="29dp"
                 android:layout_height="wrap_content"
-                android:text="Download"
-                tools:layout_editor_absoluteX="186dp"
-                tools:layout_editor_absoluteY="195dp" />
+                android:layout_marginStart="15dp"
+                android:checked="@={viewModel.selectedAllFlag}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/selectAll"
+                app:layout_constraintTop_toTopOf="@+id/selectAll"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_margin="10dp"
+                android:overScrollMode="never"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/url_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GET URL List"
+                    android:onClick="@{()->viewModel.onClickedUrlButton()}"
+                    tools:layout_editor_absoluteX="186dp"
+                    tools:layout_editor_absoluteY="195dp" />
+
+                <Button
+                    android:id="@+id/download_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Download"
+                    android:onClick="@{()->viewModel.onClickedDownload()}"
+                    tools:layout_editor_absoluteX="186dp"
+                    tools:layout_editor_absoluteY="195dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

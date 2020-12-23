@@ -1,40 +1,29 @@
 package com.naver.downloadmanager.ui;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.naver.downloadmanager.R;
 import com.naver.downloadmanager.common.Constant;
 import com.naver.downloadmanager.common.util.SharedPreferenceUtils;
 import com.naver.downloadmanager.data.datasource.URLData;
+import com.naver.downloadmanager.databinding.UrlItemBinding;
 import com.naver.downloadmanager.framework.URLViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
-    Context context;
+    LifecycleOwner lifecycleOwner;
     List<URLData> mUrls;
 
-    public URLAdapter(Context context) {
-        this.context = context;
+    public URLAdapter(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
         mUrls = new ArrayList<URLData>();
-//        mUrls.add(new URLData(1, "https://www.naver.com"));
-//        mUrls.add(new URLData(2, "https://www.naver.com"));
-//        mUrls.add(new URLData(3, "https://www.naver.com"));
-//        mUrls.add(new URLData(4, "https://www.naver.com"));
-//        mUrls.add(new URLData(5, "https://www.naver.com"));
-//        mUrls.add(new URLData(6, "https://www.naver.com"));
-//        mUrls.add(new URLData(7, "https://www.naver.com"));
     }
 
     public void setUrls(List<URLData> urls) {
@@ -43,44 +32,12 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void selectALL(boolean isChecked) {
+    public List<URLData> selectALL(boolean isChecked) {
         for (URLData urlData : mUrls) {
             urlData.setChecked(isChecked);
         }
         notifyDataSetChanged();
-    }
-
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.url_item, parent, false);
-        return new ViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.checkBox.setOnCheckedChangeListener(null);
-
-        URLData item = mUrls.get(position);
-        holder.id.setText(""+item.getId());
-        holder.url.setText(item.getUrl());
-        holder.state.setText(item.getState().name());
-        holder.checkBox.setChecked(item.isChecked());
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                item.setChecked(isChecked);
-                if (isChecked) {
-                    if (isSelectedALL()) {
-                        URLViewModel.setSelectedAllFlag(true);
-                    }
-                } else {
-                    URLViewModel.setSelectedAllFlag(false);
-                }
-            }
-        });
+        return mUrls;
     }
 
     private boolean isSelectedALL() {
@@ -92,22 +49,47 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
         return true;
     }
 
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        UrlItemBinding itemBinding = UrlItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(itemBinding, lifecycleOwner);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.bind(mUrls.get(position));
+//        holder.itemBinding.checkBox.setOnCheckedChangeListener();
+        Log.d("Moonsu", "click");
+        if (isSelectedALL()) {
+//            URLViewModel.setSelectedAllFlag(true);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mUrls.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return mUrls.get(position).getId();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
-        TextView id;
-        TextView url;
-        TextView state;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            checkBox = itemView.findViewById(R.id.check_box);
-            id = itemView.findViewById(R.id.id);
-            url = itemView.findViewById(R.id.url);
-            state = itemView.findViewById(R.id.state);
+
+        LifecycleOwner lifecycleOwner;
+        UrlItemBinding itemBinding;
+
+        public ViewHolder(@NonNull UrlItemBinding itemBinding, LifecycleOwner lifecycleOwner) {
+            super(itemBinding.getRoot());
+            this.itemBinding = itemBinding;
+            this.lifecycleOwner = lifecycleOwner;
+        }
+
+        public void bind(URLData item) {
+            itemBinding.setItem(item);
+            itemBinding.setLifecycleOwner(lifecycleOwner);
         }
     }
 }

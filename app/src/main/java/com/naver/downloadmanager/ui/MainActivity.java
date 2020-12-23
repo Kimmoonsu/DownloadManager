@@ -5,24 +5,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.naver.downloadmanager.DownloadController;
 import com.naver.downloadmanager.R;
 import com.naver.downloadmanager.common.Constant;
 import com.naver.downloadmanager.common.util.DownloadUtils;
@@ -30,12 +23,13 @@ import com.naver.downloadmanager.common.util.NetworkConnection;
 import com.naver.downloadmanager.common.util.SharedPreferenceUtils;
 import com.naver.downloadmanager.common.util.Utils;
 import com.naver.downloadmanager.data.datasource.URLData;
+import com.naver.downloadmanager.databinding.ActivityMainBinding;
 import com.naver.downloadmanager.framework.URLViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
     private RecyclerView mRecyclerView = null;
     private URLAdapter mUrlAdapter = null;
     private URLViewModel mUrlViewModel = null;
@@ -45,69 +39,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
 
-        // check the shared preference value
-        List<URLData> urls = SharedPreferenceUtils.getData(mContext, Constant.URL_KEY);
-
-        mRecyclerView = findViewById(R.id.recyclerView);
         mUrlViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(URLViewModel.class);
-        mRecyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mUrlAdapter = new URLAdapter(mContext);
-        mRecyclerView.setAdapter(mUrlAdapter);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setViewModel(mUrlViewModel);
+        binding.setLifecycleOwner(this);
 
-        mUrlViewModel.addUrl(urls);
+        setupNetworkConnection();
+        setupRecyclerView();
+        setupObserves();
 
-        Button getUrlListBtn = (Button) findViewById(R.id.url_button);
-        Button downloadBtn = (Button) findViewById(R.id.download_button);
-        getUrlListBtn.setOnClickListener(this);
-        downloadBtn.setOnClickListener(this);
+        mDownloadReceiver = new DownloadReceiver();
 
-        CheckBox selectedAllCheckBox = (CheckBox) findViewById(R.id.selectAllBtn);
+    }
 
-        selectedAllCheckBox.setOnCheckedChangeListener(this);
-        selectedAllCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.d("Moonsu", "onCheckedChanaged selectall btn");
-                mUrlAdapter.selectALL(isChecked);
-            }
-        });
-
-        mUrlViewModel.getUrls().observe(this, new Observer<List<URLData>>() {
-            @Override
-            public void onChanged(List<URLData> list) {
-                Log.d("Moonsu", "onChanged");
-                mUrlAdapter.setUrls(list);
-                SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, list);
-            }
-        });
-
-        mUrlViewModel.isSelectedALL().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isSelectedAll) {
-                checkCheckBox(selectedAllCheckBox, isSelectedAll);
-            }
-        });
-
-
-        mNetworkConnection = new NetworkConnection(mContext);
-        mNetworkConnection.register();
-
+    @Override
+    protected void onStart() {
+        super.onStart();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
-        mDownloadReceiver = new DownloadReceiver();
         registerReceiver(mDownloadReceiver, intentFilter);
     }
 
-    private void checkCheckBox(CheckBox checkBox, boolean checked) {
-        checkBox.setOnCheckedChangeListener(null);
-        checkBox.setChecked(checked);
-        checkBox.setOnCheckedChangeListener(this);
+    private void setupNetworkConnection() {
+        mNetworkConnection = new NetworkConnection(mContext);
+        mNetworkConnection.register();
+    }
+
+    private void setupRecyclerView() {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        URLAdapter urlAdapter = new URLAdapter(this);
+        urlAdapter.setHasStableIds(true);
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.setAdapter(urlAdapter);
+
+        // check the shared preference value
+        List<URLData> urls = SharedPreferenceUtils.getData(mContext, Constant.URL_KEY);
+        mUrlViewModel.addUrl(urls);
+    }
+
+    private void setupObserves() {
+        mUrlViewModel.getUrls().observe(this, list -> {
+            ((URLAdapter) binding.recyclerView.getAdapter()).setUrls(list);
+            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, list);
+        });
+
+        mUrlViewModel.selectedAllFlag.observe(this, isChecked -> {
+            List<URLData> urls = ((URLAdapter) binding.recyclerView.getAdapter()).selectALL(isChecked);
+            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, urls);
+        });
+
+        mUrlViewModel.checkNetworkConnection().observe(this, __ -> {
+            startDownload();
+        });
+    }
+
+    private void startDownload() {
+        if (mNetworkConnection.isNetworkConnected() && Utils.isNetworkConnected(mContext)) {
+            List<URLData> urlDataList = mUrlViewModel.getUrls().getValue();
+            if (urlDataList.size() == 0) {
+                Toast.makeText(mContext, getResources().getString(R.string.message_click_geturl_button), Toast.LENGTH_SHORT).show();
+            }
+            for (URLData urlData : urlDataList) {
+                if (urlData.isChecked()) {
+                    Log.d("Moonsu", "isChecked : " + urlData.getId());
+                    long downloadId = DownloadUtils.downloadFile(mContext, urlData.getUrl());
+                    urlData.setDownloadId(downloadId);
+                }
+            }
+            mUrlViewModel.addUrl(urlDataList);
+            return ;
+        }
+        Toast.makeText(mContext, getResources().getString(R.string.message_network_off), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -125,39 +131,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         mNetworkConnection.unregister();
         unregisterReceiver(mDownloadReceiver);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.download_button) {
-            if (mNetworkConnection.isNetworkConnected() && Utils.isNetworkConnected(mContext)) {
-                List<URLData> urlDataList = mUrlViewModel.getUrls().getValue();
-                if (urlDataList.size() == 0) {
-                    Toast.makeText(mContext, getResources().getString(R.string.message_click_geturl_button), Toast.LENGTH_SHORT).show();
-                }
-                for (URLData urlData : urlDataList) {
-                    if (urlData.isChecked()) {
-                        Log.d("Moonsu", "isChecked : " + urlData.getId());
-                        long downloadId = DownloadUtils.downloadFile(mContext, urlData.getUrl());
-                        urlData.setDownloadId(downloadId);
-                    }
-                }
-                mUrlViewModel.addUrl(urlDataList);
-                return ;
-            }
-            Toast.makeText(mContext, getResources().getString(R.string.message_network_off), Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.url_button) {
-            List<URLData> urls = Utils.initData();
-            mUrlViewModel.addUrl(urls);
-            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, urls);
-        }
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Log.d("Moonsu", "onCheckedChanaged selectall btn");
-        mUrlAdapter.selectALL(isChecked);
     }
 
     private class DownloadReceiver extends BroadcastReceiver {
@@ -187,6 +160,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return null;
     }
-
-
 }
