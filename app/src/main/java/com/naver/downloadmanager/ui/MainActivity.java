@@ -145,37 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             Toast.makeText(mContext, "Network has not connected", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.url_button) {
-            List<URLData> mUrls = new ArrayList<>();
-            mUrls.add(new URLData(1, "https://imageproxy.themaven.net//https%3A%2F%2Fwww.history.com%2F.image%2FMTY4OTA4MzI0ODc4NjkwMDAw%2Fchristmas-tree-gettyimages-1072744106.jpg"));
-            mUrls.add(new URLData(2, "https://www.history.com/.image/c_fill%2Ccs_srgb%2Cfl_progressive%2Ch_400%2Cq_auto:good%2Cw_620/MTY4ODE4ODA4MzY1MDAwNDY1/christmas-gettyimages-184652817.jpg"));
-            mUrls.add(new URLData(3, "https://api.time.com/wp-content/uploads/2019/06/what-is-half-christmas-workaholics.jpg"));
-            mUrls.add(new URLData(4, "https://www.scotsman.com/webimg/b25lY21zOjBlZjVkYThkLThjMTktNDM4Yi1hZjBhLTk2MWM3MTMyZDVlZjo4ZjhmMzY0MC1jYzBiLTQ2ZTYtOWUwMi05YmU3MTdkMTRhYjQ=.jpg"));
-            mUrls.add(new URLData(5, "https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cg_faces:center%2Cq_auto:good%2Cw_768/MTY5MDk1ODMyOTUwNTQ4MzYy/american-christmas-traditions-gettyimages-487756624.jpg"));
-            mUrls.add(new URLData(6, "https://www.thoughtco.com/thmb/EeiZ2qNO8kAdeTXZ1MUFCWiwMEQ=/1885x1414/smart/filters:no_upscale()/close-up-of-christmas-tree-898733426-5c79da8a46e0fb00018bd7fb.jpg"));
-            mUrls.add(new URLData(7, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
-            mUrls.add(new URLData(8, "https://imageproxy.themaven.net//https%3A%2F%2Fwww.history.com%2F.image%2FMTY4OTA4MzI0ODc4NjkwMDAw%2Fchristmas-tree-gettyimages-1072744106.jpg"));
-            mUrls.add(new URLData(9, "https://www.history.com/.image/c_fill%2Ccs_srgb%2Cfl_progressive%2Ch_400%2Cq_auto:good%2Cw_620/MTY4ODE4ODA4MzY1MDAwNDY1/christmas-gettyimages-184652817.jpg"));
-            mUrls.add(new URLData(10, "https://api.time.com/wp-content/uploads/2019/06/what-is-half-christmas-workaholics.jpg"));
-            mUrls.add(new URLData(11, "https://www.scotsman.com/webimg/b25lY21zOjBlZjVkYThkLThjMTktNDM4Yi1hZjBhLTk2MWM3MTMyZDVlZjo4ZjhmMzY0MC1jYzBiLTQ2ZTYtOWUwMi05YmU3MTdkMTRhYjQ=.jpg"));
-            mUrls.add(new URLData(12, "https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cg_faces:center%2Cq_auto:good%2Cw_768/MTY5MDk1ODMyOTUwNTQ4MzYy/american-christmas-traditions-gettyimages-487756624.jpg"));
-            mUrls.add(new URLData(13, "https://www.thoughtco.com/thmb/EeiZ2qNO8kAdeTXZ1MUFCWiwMEQ=/1885x1414/smart/filters:no_upscale()/close-up-of-christmas-tree-898733426-5c79da8a46e0fb00018bd7fb.jpg"));
-            mUrls.add(new URLData(14, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
-            mUrls.add(new URLData(15, "https://imageproxy.themaven.net//https%3A%2F%2Fwww.history.com%2F.image%2FMTY4OTA4MzI0ODc4NjkwMDAw%2Fchristmas-tree-gettyimages-1072744106.jpg"));
-            mUrls.add(new URLData(16, "https://www.history.com/.image/c_fill%2Ccs_srgb%2Cfl_progressive%2Ch_400%2Cq_auto:good%2Cw_620/MTY4ODE4ODA4MzY1MDAwNDY1/christmas-gettyimages-184652817.jpg"));
-            mUrls.add(new URLData(17, "https://api.time.com/wp-content/uploads/2019/06/what-is-half-christmas-workaholics.jpg"));
-            mUrls.add(new URLData(18, "https://www.scotsman.com/webimg/b25lY21zOjBlZjVkYThkLThjMTktNDM4Yi1hZjBhLTk2MWM3MTMyZDVlZjo4ZjhmMzY0MC1jYzBiLTQ2ZTYtOWUwMi05YmU3MTdkMTRhYjQ=.jpg"));
-            mUrls.add(new URLData(19, "https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cg_faces:center%2Cq_auto:good%2Cw_768/MTY5MDk1ODMyOTUwNTQ4MzYy/american-christmas-traditions-gettyimages-487756624.jpg"));
-            mUrls.add(new URLData(20, "https://www.thoughtco.com/thmb/EeiZ2qNO8kAdeTXZ1MUFCWiwMEQ=/1885x1414/smart/filters:no_upscale()/close-up-of-christmas-tree-898733426-5c79da8a46e0fb00018bd7fb.jpg"));
-            mUrls.add(new URLData(21, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
-            mUrls.add(new URLData(22, "https://imageproxy.themaven.net//https%3A%2F%2Fwww.history.com%2F.image%2FMTY4OTA4MzI0ODc4NjkwMDAw%2Fchristmas-tree-gettyimages-1072744106.jpg"));
-            mUrls.add(new URLData(23, "https://www.history.com/.image/c_fill%2Ccs_srgb%2Cfl_progressive%2Ch_400%2Cq_auto:good%2Cw_620/MTY4ODE4ODA4MzY1MDAwNDY1/christmas-gettyimages-184652817.jpg"));
-            mUrls.add(new URLData(24, "https://api.time.com/wp-content/uploads/2019/06/what-is-half-christmas-workaholics.jpg"));
-            mUrls.add(new URLData(25, "https://www.scotsman.com/webimg/b25lY21zOjBlZjVkYThkLThjMTktNDM4Yi1hZjBhLTk2MWM3MTMyZDVlZjo4ZjhmMzY0MC1jYzBiLTQ2ZTYtOWUwMi05YmU3MTdkMTRhYjQ=.jpg"));
-            mUrls.add(new URLData(26, "https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cg_faces:center%2Cq_auto:good%2Cw_768/MTY5MDk1ODMyOTUwNTQ4MzYy/american-christmas-traditions-gettyimages-487756624.jpg"));
-            mUrls.add(new URLData(27, "https://www.thoughtco.com/thmb/EeiZ2qNO8kAdeTXZ1MUFCWiwMEQ=/1885x1414/smart/filters:no_upscale()/close-up-of-christmas-tree-898733426-5c79da8a46e0fb00018bd7fb.jpg"));
-            mUrls.add(new URLData(28, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
-            mUrlViewModel.addUrl(mUrls);
-            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, mUrls);
+            List<URLData> urls = Utils.initData();
+            mUrlViewModel.addUrl(urls);
+            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, urls);
         }
     }
 
