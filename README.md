@@ -17,3 +17,5 @@
     - RecyclerView
 
 - 시연 영상 : https://drive.google.com/drive/folders/1F0e2HoELdS3w7BPWXc6Hnev7hQHWDY-Y?usp=sharing
+
+- 앱 설명 : ![downloadmanager](https://user-images.githubusercontent.com/17000689/102997036-7c0b5e80-4567-11eb-8077-7638941fba3f.png)
