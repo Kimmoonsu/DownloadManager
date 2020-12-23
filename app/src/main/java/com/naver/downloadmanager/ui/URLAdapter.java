@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.naver.downloadmanager.R;
+import com.naver.downloadmanager.common.Constant;
+import com.naver.downloadmanager.common.util.SharedPreferenceUtils;
 import com.naver.downloadmanager.data.datasource.URLData;
 import com.naver.downloadmanager.framework.URLViewModel;
 
@@ -25,7 +27,7 @@ public class URLAdapter extends RecyclerView.Adapter<URLAdapter.ViewHolder> {
 
     public URLAdapter(Context context) {
         this.context = context;
-        mUrls = new ArrayList<>();
+        mUrls = new ArrayList<URLData>();
 //        mUrls.add(new URLData(1, "https://www.naver.com"));
 //        mUrls.add(new URLData(2, "https://www.naver.com"));
 //        mUrls.add(new URLData(3, "https://www.naver.com"));

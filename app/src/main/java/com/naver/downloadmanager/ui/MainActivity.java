@@ -24,8 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.naver.downloadmanager.DownloadController;
 import com.naver.downloadmanager.R;
+import com.naver.downloadmanager.common.Constant;
 import com.naver.downloadmanager.common.util.DownloadUtils;
 import com.naver.downloadmanager.common.util.NetworkConnection;
+import com.naver.downloadmanager.common.util.SharedPreferenceUtils;
+import com.naver.downloadmanager.common.util.Utils;
 import com.naver.downloadmanager.data.datasource.URLData;
 import com.naver.downloadmanager.framework.URLViewModel;
 
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
 
+        // check the shared preference value
+        List<URLData> urls = SharedPreferenceUtils.getData(mContext, Constant.URL_KEY);
+
         mRecyclerView = findViewById(R.id.recyclerView);
         mUrlViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(URLViewModel.class);
         mRecyclerView.setHasFixedSize(true);
@@ -52,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRecyclerView.setLayoutManager(layoutManager);
         mUrlAdapter = new URLAdapter(mContext);
         mRecyclerView.setAdapter(mUrlAdapter);
+
+        mUrlViewModel.addUrl(urls);
 
         Button getUrlListBtn = (Button) findViewById(R.id.url_button);
         Button downloadBtn = (Button) findViewById(R.id.download_button);
@@ -73,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChanged(List<URLData> list) {
                 Log.d("Moonsu", "onChanged");
-                    mUrlAdapter.setUrls(list);
+                mUrlAdapter.setUrls(list);
+                SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, list);
             }
         });
 
@@ -166,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mUrls.add(new URLData(27, "https://www.thoughtco.com/thmb/EeiZ2qNO8kAdeTXZ1MUFCWiwMEQ=/1885x1414/smart/filters:no_upscale()/close-up-of-christmas-tree-898733426-5c79da8a46e0fb00018bd7fb.jpg"));
             mUrls.add(new URLData(28, "https://static.officeholidays.com/images/1280x853c/christmas.jpg"));
             mUrlViewModel.addUrl(mUrls);
+            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, mUrls);
         }
     }
 
@@ -202,4 +212,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return null;
     }
+
+
 }
