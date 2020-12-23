@@ -16,4 +16,4 @@
     - NetworkCallback
     - RecyclerView
 
-- 시연 영상 :   
+- 시연 영상 :

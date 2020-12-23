@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.naver.downloadmanager.framework.URLViewModel" />
+            type="com.naver.downloadmanager.viewmodel.URLViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

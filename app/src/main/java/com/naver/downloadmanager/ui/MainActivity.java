@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,7 +23,7 @@ import com.naver.downloadmanager.common.util.SharedPreferenceUtils;
 import com.naver.downloadmanager.common.util.Utils;
 import com.naver.downloadmanager.data.datasource.URLData;
 import com.naver.downloadmanager.databinding.ActivityMainBinding;
-import com.naver.downloadmanager.framework.URLViewModel;
+import com.naver.downloadmanager.viewmodel.URLViewModel;
 
 import java.util.List;
 
@@ -45,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewModel(mUrlViewModel);
         binding.setLifecycleOwner(this);
+
+        binding.selectAllBtn.setOnClickListener(v -> {
+            List<URLData> urls = ((URLAdapter) binding.recyclerView.getAdapter()).selectALL(binding.selectAllBtn.isChecked());
+            SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, urls);
+        });
 
         setupNetworkConnection();
         setupRecyclerView();
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        URLAdapter urlAdapter = new URLAdapter(this);
+        URLAdapter urlAdapter = new URLAdapter(this, mUrlViewModel);
         urlAdapter.setHasStableIds(true);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(layoutManager);
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mUrlViewModel.selectedAllFlag.observe(this, isChecked -> {
-            List<URLData> urls = ((URLAdapter) binding.recyclerView.getAdapter()).selectALL(isChecked);
+            List<URLData> urls = ((URLAdapter) binding.recyclerView.getAdapter()).getUrls();
             SharedPreferenceUtils.setData(mContext, Constant.URL_KEY, urls);
         });
 
@@ -105,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
             }
             for (URLData urlData : urlDataList) {
                 if (urlData.isChecked()) {
-                    Log.d("Moonsu", "isChecked : " + urlData.getId());
                     long downloadId = DownloadUtils.downloadFile(mContext, urlData.getUrl());
                     urlData.setDownloadId(downloadId);
                 }
@@ -140,14 +143,11 @@ public class MainActivity extends AppCompatActivity {
             String actionId = intent.getAction();
             List<URLData> urlDataList = mUrlViewModel.getUrls().getValue();
             URLData target = findUrlData(urlDataList, id);
-            Log.d("Moonsu", "onReceive : " + target.getId());
             if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(actionId)) {
                 boolean isSuccessDownload = DownloadUtils.isSuccessDownload(mContext, target.getDownloadId());
-                Log.d("Moonsu", "download complete : " + isSuccessDownload);
                 target.setState(isSuccessDownload ? URLData.STATE.SUCCESS : URLData.STATE.FAIL);
                 mUrlViewModel.addUrl(urlDataList);
             } else if (DownloadManager.ACTION_NOTIFICATION_CLICKED.equals(actionId)) {
-                Log.d("Moonsu", "clicked notifiaction");
             }
         }
     }

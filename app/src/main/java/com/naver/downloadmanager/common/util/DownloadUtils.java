@@ -1,19 +1,17 @@
 package com.naver.downloadmanager.common.util;
 
 import android.app.DownloadManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.URLUtil;
 
 import com.naver.downloadmanager.R;
 
 public class DownloadUtils {
+    public static final String TAG = "DownloadUtils";
 
     public static long downloadFile(Context context, String url) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -45,10 +43,10 @@ public class DownloadUtils {
         int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
         int status = cursor.getInt(columnIndex);
         if (status == DownloadManager.STATUS_SUCCESSFUL) {
-            Log.d("Moonsu", "download successful");
+            Log.d(TAG, "download successful");
             return true;
         } else if (status == DownloadManager.STATUS_FAILED) {
-            Log.d("Moonsu", "download FAILED");
+            Log.d(TAG, "download FAILED");
             return false;
         }
         return false;

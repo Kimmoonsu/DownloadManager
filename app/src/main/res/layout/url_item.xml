@@ -7,6 +7,10 @@
         <variable
             name="item"
             type="com.naver.downloadmanager.data.datasource.URLData" />
+
+        <variable
+            name="viewModel"
+            type="com.naver.downloadmanager.viewmodel.IURLViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +21,10 @@
         <CheckBox
             android:id="@+id/check_box"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_marginStart="10dp"
             android:checked="@={item.checked}"
+            android:onClick="@{()->viewModel.onChangedCheckState()}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
